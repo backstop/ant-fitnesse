@@ -11,6 +11,9 @@
     <property name="lib" value="${basedir}/lib"/>
     <property name="lib.compile" location="${lib}/compile"/>
     <property name="lib.build" location="${lib}/build"/>
+    <property name="reports" location="${build}/reports"/>
+    <property name="reports.ivy" location="${reports}/ivy"/>
+    <property name="sonar-work-dir" location="${build}/sonar"/>
 
     <property name="dist" value="${build}/dist"/>
     <property name="client.jar" value="ant-fitnesse.jar"/>
