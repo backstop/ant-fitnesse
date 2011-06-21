@@ -87,7 +87,7 @@
         <pathelement location="${lib.build}/sonar-ant-task-1.0.jar" />
     </path>
     
-    <target name="sonar" depends="svnrev,-sonar-java-props">
+    <target name="sonar" depends="svnrev,resolve,-sonar-java-props">
         <taskdef resource="org/sonar/ant/antlib.xml">
             <classpath refid="sonar.classpath"/>
         </taskdef>
