@@ -45,7 +45,9 @@ public class FitnesseTask extends Java {
             addSysproperty(var);
         }
 
-        StringBuilder filterLine = new StringBuilder("FundbutterTestSuite?suite&nohistory&format=text");
+        StringBuilder filterLine = new StringBuilder();
+        filterLine.append(suiteName);
+        filterLine.append("?suite&nohistory&format=text");
         for (SuiteFilter filter : suiteFilters) {
             filterLine.append("&suiteFilter=").append(filter.getFilterName());
         }
