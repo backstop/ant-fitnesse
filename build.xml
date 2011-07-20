@@ -87,7 +87,7 @@
         <pathelement location="${lib.build}/sonar-ant-task-1.0.jar" />
     </path>
     
-    <target name="sonar" depends="svnrev,resolve,-sonar-java-props">
+    <target name="sonar" depends="resolve,-sonar-java-props">
         <taskdef resource="org/sonar/ant/antlib.xml">
             <classpath refid="sonar.classpath"/>
         </taskdef>
@@ -95,7 +95,7 @@
         <property name="sonar.dynamicAnalysis" value="reuseReports"/>
         <property name="sonar.projectName" value="Ant Fitnesse"/>
 
-        <sonar workDir="${sonar-work-dir}" key="com.backstopsolutions:Ant Fitnesse" version="${dist.revision}">
+        <sonar workDir="${sonar-work-dir}" key="com.backstopsolutions:Ant Fitnesse" version="${backstop.sonar.version}">
             <!-- source directories (required) -->
             <sources>
                 <path location="${src}"/>
