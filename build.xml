@@ -1,8 +1,9 @@
-<project default="dist" name="ant-fitnesse" xmlns:ivy="antlib:org.apache.ivy.ant">
+<project default="dist" name="ant-fitnesse" xmlns:ivy="antlib:org.apache.ivy.ant" xmlns:fit="antlib:com.backstopsolutions.ant.fitnesse">
     <import file="../commons-build/build-common.xml"/>
     <import file="../commons-build/build-ivy.xml"/>
 
     <property name="src" value="${basedir}/src"/>
+    <property name="resources" value="${basedir}/resources"/>
     <property name="test-src" value="${basedir}/test"/>
 
     <property name="build" location="${basedir}/build"/>
@@ -74,9 +75,8 @@
 
     <target name="jar" depends="compile" description="Create library">
     	<jar destfile="${dist}/${client.jar}">
-            <fileset dir="${build.classes}">
-                <include name="com/backstopsolutions/ant/fitnesse/**"/>
-            </fileset>
+            <fileset dir="${build.classes}" includes="com/backstopsolutions/ant/fitnesse/**"/>
+            <fileset dir="${resources}" includes="com/backstopsolutions/ant/fitnesse/*"/>
         </jar>
     </target>
 
@@ -111,5 +111,40 @@
                 <path location="${build.classes}"/>
             </binaries>
         </sonar>
+    </target>
+
+    <path id="fittasks.classpath">
+        <pathelement path="${build.classes}"/>
+        <pathelement path="${resources}"/>
+    </path>
+
+    <path id="integration.classpath">
+        <fileset dir="${basedir}/lib/example" includes="*.jar"/>
+        <pathelement path="${integration.classes}"/>
+        <pathelement path="${integration.resources}"/>
+    </path>
+
+    <target name="example-test">
+        <taskdef resource="com/backstopsolutions/ant/fitnesse/tasks.xml"
+                 uri="antlib:com.backstopsolutions.ant.fitnesse" classpathref="fittasks.classpath"/>
+        <mkdir dir="${build}/integration/results"/>
+        <fit:test port="24242" classPathRef="integration.classpath" threadcount="5" resultPath="${build}/integration/results">
+<!--
+            <fit:suitefilter>
+                <fit:filter>quicktest</fit:filter>
+            </fit:suitefilter>
+-->
+            <fit:suites>
+                <fit:suite name="BlortSuite"/>
+                <fit:suite name="DingusSuite.BigThingsSuite"/>
+                <fit:suite name="DingusSuite.LittleThingsSuite"/>
+            </fit:suites>
+        </fit:test>
+    </target>
+
+    <target name="example-interactive">
+        <taskdef resource="com/backstopsolutions/ant/fitnesse/tasks.xml"
+                 uri="antlib:com.backstopsolutions.ant.fitnesse" classpathref="fittasks.classpath"/>
+        <fit:interactive port="9234" classpathref="integration.classpath"/>
     </target>
 </project>

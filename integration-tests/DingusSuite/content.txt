@@ -1,0 +1,14 @@
+!*****> Collapsed Section Definitions
+!define TEST_SYSTEM {slim}
+!define REGRACE_TOC {true}
+!define HELP_TOC {true}
+!define PROPERTY_TOC {true}
+!define REGRACE_LINK {true}
+!define FILTER_TOC {true}
+!define COMMAND_PATTERN {java -ea -cp %p %m}
+
+!path lib/build/*.jar
+!path lib/example/*.jar
+**********!
+
+!contents -R2
