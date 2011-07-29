@@ -110,6 +110,11 @@
             <binaries>
                 <path location="${build.classes}"/>
             </binaries>
+
+            <libraries>
+                <path refid="lib.build.path"/>
+                <path refid="lib.compile.path"/>
+            </libraries>
         </sonar>
     </target>
 
