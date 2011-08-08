@@ -1,12 +1,19 @@
 package com.backstopsolutions.ant.fitnesse;
 
-import org.apache.tools.ant.types.ResourceCollection;
-
 /**
- * Created by IntelliJ IDEA.
- * User: nriffe
- * Date: 7/28/11
- * Time: 1:14 PM
- */
+* Created by IntelliJ IDEA.
+* User: nriffe
+* Date: 8/5/11
+* Time: 1:40 PM
+*/
 public class SuiteFilter {
+    private String filterName;
+
+    public String getFilterName() {
+        return filterName;
+    }
+
+    public void setFilterName(String filterName) {
+        this.filterName = filterName;
+    }
 }

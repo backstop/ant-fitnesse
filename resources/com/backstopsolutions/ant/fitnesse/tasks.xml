@@ -4,4 +4,5 @@
     <typedef name="test" classname="com.backstopsolutions.ant.fitnesse.TestTask"/>
     <typedef name="runner" classname="com.backstopsolutions.ant.fitnesse.RunnerTask"/>
     <typedef name="interactive" classname="com.backstopsolutions.ant.fitnesse.InteractiveTask"/>
+    <typedef name="suites" classname="com.backstopsolutions.ant.fitnesse.Suites"/>
 </antlib>

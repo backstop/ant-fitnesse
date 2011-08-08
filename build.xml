@@ -41,14 +41,14 @@
     <!-- if you change this target, please also change the next one -->
     <target name="publish" depends="dist" description="Publish artifacts to repository">
         <ivy:publish resolver="backstop" overwrite="true">
-            <artifacts pattern="${dist}/[artifact].[ext]"/>
+            <ivy:artifacts pattern="${dist}/[artifact].[ext]"/>
         </ivy:publish>
     </target>
 
     <!-- if you change this target, please also change the prior one -->
     <target name="publish-hudson" depends="dist,sonar" description="Publish artifacts to repository">
         <ivy:publish resolver="hudson" overwrite="true">
-            <artifacts pattern="${dist}/[artifact].[ext]"/>
+            <ivy:artifacts pattern="${dist}/[artifact].[ext]"/>
         </ivy:publish>
     </target>
     <!-- End ivy functions -->
@@ -118,38 +118,4 @@
         </sonar>
     </target>
 
-    <path id="fittasks.classpath">
-        <pathelement path="${build.classes}"/>
-        <pathelement path="${resources}"/>
-    </path>
-
-    <path id="integration.classpath">
-        <fileset dir="${basedir}/lib/example" includes="*.jar"/>
-        <pathelement path="${integration.classes}"/>
-        <pathelement path="${integration.resources}"/>
-    </path>
-
-    <target name="example-test">
-        <taskdef resource="com/backstopsolutions/ant/fitnesse/tasks.xml"
-                 uri="antlib:com.backstopsolutions.ant.fitnesse" classpathref="fittasks.classpath"/>
-        <mkdir dir="${build}/integration/results"/>
-        <fit:test port="24242" classPathRef="integration.classpath" threadcount="5" resultPath="${build}/integration/results">
-<!--
-            <fit:suitefilter>
-                <fit:filter>quicktest</fit:filter>
-            </fit:suitefilter>
--->
-            <fit:suites>
-                <fit:suite name="BlortSuite"/>
-                <fit:suite name="DingusSuite.BigThingsSuite"/>
-                <fit:suite name="DingusSuite.LittleThingsSuite"/>
-            </fit:suites>
-        </fit:test>
-    </target>
-
-    <target name="example-interactive">
-        <taskdef resource="com/backstopsolutions/ant/fitnesse/tasks.xml"
-                 uri="antlib:com.backstopsolutions.ant.fitnesse" classpathref="fittasks.classpath"/>
-        <fit:interactive port="9234" classpathref="integration.classpath"/>
-    </target>
 </project>

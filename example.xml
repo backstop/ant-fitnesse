@@ -1,0 +1,37 @@
+<project default="example-test" name="ant-fitnesse-example" xmlns:fit="antlib:com.backstopsolutions.ant.fitnesse">
+
+    <property name="resources" value="${basedir}/resources"/>
+
+    <property name="build" location="${basedir}/build"/>
+    <property name="build.classes" location="${build}/classes"/>
+
+    <path id="fittasks.classpath">
+        <pathelement path="${build.classes}"/>
+        <pathelement path="${resources}"/>
+    </path>
+
+    <taskdef resource="com/backstopsolutions/ant/fitnesse/tasks.xml"
+             uri="antlib:com.backstopsolutions.ant.fitnesse" classpathref="fittasks.classpath"/>
+
+    <path id="integration.classpath">
+        <fileset dir="${basedir}/lib/example" includes="*.jar"/>
+    </path>
+
+    <fit:suites id="fullSuite">
+        <fit:suite name="BlortSuite"/>
+        <fit:suite name="DingusSuite.BigThingsSuite"/>
+        <fit:suite name="DingusSuite.LittleThingsSuite"/>
+    </fit:suites>
+
+    <target name="example-test">
+        <mkdir dir="${build}/integration/results"/>
+        <fit:test port="24242" classPathRef="integration.classpath" concurrentsuites="5"
+                  resultPath="${build}/integration/results" integrationTestsPath="integration-tests">
+            <fit:suites refid="fullSuite"/>
+        </fit:test>
+    </target>
+
+    <target name="example-interactive">
+        <fit:interactive port="9234" classpathref="integration.classpath"/>
+    </target>
+</project>

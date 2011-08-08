@@ -3,14 +3,13 @@ package com.backstopsolutions.ant.fitnesse;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.taskdefs.Echo;
 import org.apache.tools.ant.taskdefs.Parallel;
 import org.apache.tools.ant.taskdefs.Sequential;
 import org.apache.tools.ant.taskdefs.Sleep;
 import org.apache.tools.ant.types.Reference;
 
 import java.io.File;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -18,54 +17,70 @@ import java.util.Set;
  * Date: 7/28/11
  * Time: 11:56 AM
  */
-public class TestTask extends Parallel {
+public class TestTask extends Task {
 
     private int port;
     private Reference classpathRef;
-    private Suites suites = new Suites(this);
+    private Suites suites = new Suites();
+    private List<SuiteFilter> filters = new ArrayList<SuiteFilter>();
     private File resultPath;
+    private int concurrentSuites;
+    private String integrationTestsPath;
+    private String slimTableFactory;
 
     public TestTask() {
+        setConcurrentSuites(1);
+        setIntegrationTestsPath("fitnesse");
     }
 
     @Override
     public void execute() throws BuildException {
-        addDaemons(initDaemons(getProject(), getPort(), getClasspathRef()));
+        Parallel container = new Parallel();
+        container.setProject(getProject());
+        container.setTaskName("parallel");
+        container.addDaemons(initDaemons(getProject(), getPort(), getClasspathRef(), getIntegrationTestsPath(), getSlimTableFactory()));
+        container.addTask(initSequence(getProject(), getPort(), getResultPath(), getSuiteNames(suites), filters, getConcurrentSuites()));
+        container.execute();
+    }
+
+    private static Set<String> getSuiteNames(Suites suites) {
+        Set<String> names = new HashSet<String>();
+        Iterator suitie = suites.iterator();
+        while (suitie.hasNext()) {
+            Suite suite = (Suite) suitie.next();
+            names.add(suite.getName());
+        }
+        return names;
+    }
+
+    private static Sequential initSequence(Project project, int port, File resultPath, Set<String> suiteNames, List<SuiteFilter> suiteFilters, int concurrentSuites) {
         Sequential runnerSequence = new Sequential();
-        runnerSequence.setProject(getProject());
+        runnerSequence.setProject(project);
         runnerSequence.setTaskName("sequential");
-        runnerSequence.addTask(initSleep(getProject(), 10));
-        runnerSequence.addTask(initRunners(getProject(), suites.getSuiteNames(), getPort(), getClasspathRef(), getResultPath()));
-        addTask(runnerSequence);
-
-        super.execute();
+        runnerSequence.addTask(initSleep(project, 10));
+        runnerSequence.addTask(initRunners(project, suiteNames, port, resultPath, suiteFilters, concurrentSuites));
+        return runnerSequence;
     }
 
-    private static Task debug(Project project, String message) {
-        Echo echo = new Echo();
-        echo.setProject(project);
-        echo.setTaskName("echo");
-        echo.setMessage("DEBUG: " + message);
-        return echo;
-    }
-
-    private static TaskList initDaemons(Project project, int port, Reference classpathRef) {
-        TaskList daemonList = new TaskList();
+    private static Parallel.TaskList initDaemons(Project project, int port, Reference classpathRef, String integrationTestsPath, String slimTableFactory) {
+        Parallel.TaskList daemonList = new Parallel.TaskList();
         InteractiveTask fitnesseTask = new InteractiveTask();
         fitnesseTask.setTaskName("fitnesse");
         fitnesseTask.setProject(project);
         fitnesseTask.setPort(port);
         fitnesseTask.setClasspathRef(classpathRef);
+        fitnesseTask.setIntegrationTestsPath(integrationTestsPath);
+        fitnesseTask.setSlimTableFactory(slimTableFactory);
         daemonList.addTask(fitnesseTask);
         return daemonList;
     }
 
-    private static Task initRunners(Project project, Set<String> suiteNames, int port, Reference classpathRef, File resultPath) {
+    private static Task initRunners(Project project, Set<String> suiteNames, int port, File resultPath, List<SuiteFilter> suiteFilters, int concurrentSuites) {
         Parallel runners = new Parallel();
         runners.setProject(project);
         runners.setTaskName("parallel");
         runners.setFailOnAny(true);
-        runners.addTask(initSleep(project, 30));
+        runners.setThreadCount(concurrentSuites);
         for (String suiteName : suiteNames) {
             RunnerTask runner = new RunnerTask();
             runner.setProject(project);
@@ -74,6 +89,7 @@ public class TestTask extends Parallel {
             runner.setPort(port);
             runner.setSuite(suiteName);
             runner.setResultPath(resultPath);
+            runner.setSuiteFilters(suiteFilters);
             runners.addTask(runner);
         }
         return runners;
@@ -85,6 +101,22 @@ public class TestTask extends Parallel {
         sleep.setTaskName("sleep");
         sleep.setSeconds(seconds);
         return sleep;
+    }
+
+    public String getIntegrationTestsPath() {
+        return integrationTestsPath;
+    }
+
+    public void setIntegrationTestsPath(String integrationTestsPath) {
+        this.integrationTestsPath = integrationTestsPath;
+    }
+
+    public String getSlimTableFactory() {
+        return slimTableFactory;
+    }
+
+    public void setSlimTableFactory(String slimTableFactory) {
+        this.slimTableFactory = slimTableFactory;
     }
 
     public int getPort() {
@@ -113,5 +145,22 @@ public class TestTask extends Parallel {
 
     public Suites createSuites() {
         return suites;
+    }
+
+    public SuiteFilter createFilter() {
+        SuiteFilter suiteFilter = new SuiteFilter();
+        filters.add(suiteFilter);
+        return suiteFilter;
+    }
+
+    public int getConcurrentSuites() {
+        return concurrentSuites;
+    }
+
+    public void setConcurrentSuites(int concurrentSuites) {
+        if (concurrentSuites < 1) {
+            throw new IllegalArgumentException("concurrentSuites must be at least 1");
+        }
+        this.concurrentSuites = concurrentSuites;
     }
 }

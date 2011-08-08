@@ -20,7 +20,7 @@ public class InteractiveTask extends Java {
         setClassname("fitnesseMain.FitNesseMain");
         setFailonerror(true);
         setFork(true);
-        setIntegrationTestsPath("integration-tests");
+        setIntegrationTestsPath("fitnesse");
         setPort(9123);
     }
 
@@ -50,17 +50,17 @@ public class InteractiveTask extends Java {
 
     @Override
     public void execute() throws BuildException {
-        if (slimTableFactory != null) {
+        if (getSlimTableFactory() != null) {
             Environment.Variable var = new Environment.Variable();
             var.setKey("fitnesse.slimTables.SlimTableFactory");
-            var.setValue(slimTableFactory);
+            var.setValue(getSlimTableFactory());
             addSysproperty(var);
         }
 
         createArg().setLine("-p");
-        createArg().setLine(Integer.toString(port));
+        createArg().setLine(Integer.toString(getPort()));
         createArg().setLine("-r");
-        createArg().setLine(integrationTestPath);
+        createArg().setLine(getIntegrationTestPath());
 //        createArg().setLine("-o");
         createArg().setLine("-e");
         createArg().setLine("0");

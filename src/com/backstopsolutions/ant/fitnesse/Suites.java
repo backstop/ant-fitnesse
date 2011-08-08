@@ -1,8 +1,8 @@
 package com.backstopsolutions.ant.fitnesse;
 
+import org.apache.tools.ant.types.DataType;
 import org.apache.tools.ant.types.ResourceCollection;
 
-import javax.swing.text.StyleContext;
 import java.util.*;
 
 /**
@@ -11,25 +11,28 @@ import java.util.*;
  * Date: 7/28/11
  * Time: 12:15 PM
  */
-public class Suites {
+public class Suites extends DataType implements ResourceCollection {
 
-    private TestTask testTask;
     private List<Suite> suites = new ArrayList<Suite>();
-
-    public Suites(TestTask testTask) {
-        this.testTask = testTask;
-    }
 
     public void addSuite(Suite suite) {
         suites.add(suite);
     }
 
-    public Set<String> getSuiteNames() {
-        Set<String> names = new HashSet<String>();
-        for (Suite suite : suites) {
-            names.add(suite.getName());
-        }
-        return names;
+    @Override
+    public boolean isReference() {
+        return super.isReference();
     }
 
+    public Iterator iterator() {
+        return isReference() ? ((Suites) getCheckedRef()).iterator() : suites.iterator();
+    }
+
+    public int size() {
+        return isReference() ? ((Suites) getCheckedRef()).size() : suites.size();
+    }
+
+    public boolean isFilesystemOnly() {
+        return false;
+    }
 }

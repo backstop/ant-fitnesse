@@ -6,6 +6,7 @@ import org.apache.tools.ant.taskdefs.Get;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -18,6 +19,7 @@ public class RunnerTask extends Get {
     private int port;
     private String host;
     private File resultPath;
+    private List<SuiteFilter> suiteFilters;
 
     @Override
     public void execute() throws BuildException {
@@ -28,6 +30,11 @@ public class RunnerTask extends Get {
         uri.append(getSuite());
         uri.append("?suite");
         uri.append("&format=xml");
+
+        for (SuiteFilter filter : getSuiteFilters()) {
+            uri.append("&suiteFilter=");
+            uri.append(filter.getFilterName());
+        }
 
         try {
             setSrc(new URL("http", getHost(), getPort(), uri.toString()));
@@ -72,5 +79,13 @@ public class RunnerTask extends Get {
 
     public void setResultPath(File resultPath) {
         this.resultPath = resultPath;
+    }
+
+    public List<SuiteFilter> getSuiteFilters() {
+        return suiteFilters;
+    }
+
+    public void setSuiteFilters(List<SuiteFilter> suiteFilters) {
+        this.suiteFilters = suiteFilters;
     }
 }

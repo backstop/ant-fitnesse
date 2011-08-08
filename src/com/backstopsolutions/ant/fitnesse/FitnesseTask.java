@@ -62,15 +62,4 @@ public class FitnesseTask extends Java {
         super.execute();
     }
 
-    public static class SuiteFilter {
-        private String filterName;
-
-        public String getFilterName() {
-            return filterName;
-        }
-
-        public void setFilterName(String filterName) {
-            this.filterName = filterName;
-        }
-    }
 }
