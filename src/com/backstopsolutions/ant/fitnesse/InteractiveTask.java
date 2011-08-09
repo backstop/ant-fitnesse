@@ -1,6 +1,5 @@
 package com.backstopsolutions.ant.fitnesse;
 
-import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.types.Environment;
 
@@ -12,6 +11,8 @@ import org.apache.tools.ant.types.Environment;
  */
 public class InteractiveTask extends Java {
 
+    private static final int DEFAULT_PORT = 9123;
+    
     private int port;
     private String slimTableFactory;
     private String integrationTestPath;
@@ -20,8 +21,8 @@ public class InteractiveTask extends Java {
         setClassname("fitnesseMain.FitNesseMain");
         setFailonerror(true);
         setFork(true);
-        setIntegrationTestsPath("fitnesse");
-        setPort(9123);
+        integrationTestPath = "fitnesse";
+        port = DEFAULT_PORT;
     }
 
     public int getPort() {

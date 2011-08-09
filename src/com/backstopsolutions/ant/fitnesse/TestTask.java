@@ -1,6 +1,5 @@
 package com.backstopsolutions.ant.fitnesse;
 
-import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.Parallel;
@@ -19,6 +18,9 @@ import java.util.*;
  */
 public class TestTask extends Task {
 
+    private static final int DEFAULT_CONCURRENT_SUITES = 1;
+    private static final int SECONDS_TO_WAIT_FOR_WEBSERVER_TO_START = 10;
+
     private int port;
     private Reference classpathRef;
     private Suites suites = new Suites();
@@ -30,8 +32,8 @@ public class TestTask extends Task {
     private boolean saveHistory;
 
     public TestTask() {
-        setConcurrentSuites(1);
-        setIntegrationTestsPath("fitnesse");
+        concurrentSuites = DEFAULT_CONCURRENT_SUITES;
+        integrationTestsPath = "fitnesse";
     }
 
     @Override
@@ -58,7 +60,7 @@ public class TestTask extends Task {
         Sequential runnerSequence = new Sequential();
         runnerSequence.setProject(project);
         runnerSequence.setTaskName("sequential");
-        runnerSequence.addTask(initSleep(project, 10));
+        runnerSequence.addTask(initSleep(project, SECONDS_TO_WAIT_FOR_WEBSERVER_TO_START));
         runnerSequence.addTask(initRunners(project, suiteNames, port, resultPath, suiteFilters, concurrentSuites, saveHistory));
         return runnerSequence;
     }
