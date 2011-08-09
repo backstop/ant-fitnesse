@@ -49,7 +49,7 @@ public class InteractiveTask extends Java {
     }
 
     @Override
-    public void execute() throws BuildException {
+    public void execute() {
         if (getSlimTableFactory() != null) {
             Environment.Variable var = new Environment.Variable();
             var.setKey("fitnesse.slimTables.SlimTableFactory");

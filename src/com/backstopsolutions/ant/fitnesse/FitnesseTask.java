@@ -37,7 +37,7 @@ public class FitnesseTask extends Java {
     }
 
     @Override
-    public void execute() throws BuildException {
+    public void execute() {
         if (slimTableFactory != null) {
             Environment.Variable var = new Environment.Variable();
             var.setKey("fitnesse.slimTables.SlimTableFactory");

@@ -23,7 +23,7 @@ public class RunnerTask extends Get {
     private boolean saveHistory;
 
     @Override
-    public void execute() throws BuildException {
+    public void execute() {
         setDest(getDest(getResultPath(), getSuite()));
 
         StringBuilder uri = new StringBuilder();

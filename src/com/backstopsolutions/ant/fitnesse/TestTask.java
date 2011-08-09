@@ -35,7 +35,7 @@ public class TestTask extends Task {
     }
 
     @Override
-    public void execute() throws BuildException {
+    public void execute() {
         Parallel container = new Parallel();
         container.setProject(getProject());
         container.setTaskName("parallel");

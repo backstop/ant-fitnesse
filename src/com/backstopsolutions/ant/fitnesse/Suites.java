@@ -19,11 +19,6 @@ public class Suites extends DataType implements ResourceCollection {
         suites.add(suite);
     }
 
-    @Override
-    public boolean isReference() {
-        return super.isReference();
-    }
-
     public Iterator iterator() {
         return isReference() ? ((Suites) getCheckedRef()).iterator() : suites.iterator();
     }
