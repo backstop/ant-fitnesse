@@ -27,6 +27,7 @@ public class TestTask extends Task {
     private int concurrentSuites;
     private String integrationTestsPath;
     private String slimTableFactory;
+    private boolean saveHistory;
 
     public TestTask() {
         setConcurrentSuites(1);
@@ -39,7 +40,7 @@ public class TestTask extends Task {
         container.setProject(getProject());
         container.setTaskName("parallel");
         container.addDaemons(initDaemons(getProject(), getPort(), getClasspathRef(), getIntegrationTestsPath(), getSlimTableFactory()));
-        container.addTask(initSequence(getProject(), getPort(), getResultPath(), getSuiteNames(suites), filters, getConcurrentSuites()));
+        container.addTask(initSequence(getProject(), getPort(), getResultPath(), getSuiteNames(suites), filters, getConcurrentSuites(), saveHistory));
         container.execute();
     }
 
@@ -53,12 +54,12 @@ public class TestTask extends Task {
         return names;
     }
 
-    private static Sequential initSequence(Project project, int port, File resultPath, Set<String> suiteNames, List<SuiteFilter> suiteFilters, int concurrentSuites) {
+    private static Sequential initSequence(Project project, int port, File resultPath, Set<String> suiteNames, List<SuiteFilter> suiteFilters, int concurrentSuites, boolean saveHistory) {
         Sequential runnerSequence = new Sequential();
         runnerSequence.setProject(project);
         runnerSequence.setTaskName("sequential");
         runnerSequence.addTask(initSleep(project, 10));
-        runnerSequence.addTask(initRunners(project, suiteNames, port, resultPath, suiteFilters, concurrentSuites));
+        runnerSequence.addTask(initRunners(project, suiteNames, port, resultPath, suiteFilters, concurrentSuites, saveHistory));
         return runnerSequence;
     }
 
@@ -75,7 +76,7 @@ public class TestTask extends Task {
         return daemonList;
     }
 
-    private static Task initRunners(Project project, Set<String> suiteNames, int port, File resultPath, List<SuiteFilter> suiteFilters, int concurrentSuites) {
+    private static Task initRunners(Project project, Set<String> suiteNames, int port, File resultPath, List<SuiteFilter> suiteFilters, int concurrentSuites, boolean saveHistory) {
         Parallel runners = new Parallel();
         runners.setProject(project);
         runners.setTaskName("parallel");
@@ -90,6 +91,7 @@ public class TestTask extends Task {
             runner.setSuite(suiteName);
             runner.setResultPath(resultPath);
             runner.setSuiteFilters(suiteFilters);
+            runner.setSaveHistory(saveHistory);
             runners.addTask(runner);
         }
         return runners;
@@ -162,5 +164,13 @@ public class TestTask extends Task {
             throw new IllegalArgumentException("concurrentSuites must be at least 1");
         }
         this.concurrentSuites = concurrentSuites;
+    }
+
+    public boolean isSaveHistory() {
+        return saveHistory;
+    }
+
+    public void setSaveHistory(boolean saveHistory) {
+        this.saveHistory = saveHistory;
     }
 }

@@ -20,6 +20,7 @@ public class RunnerTask extends Get {
     private String host;
     private File resultPath;
     private List<SuiteFilter> suiteFilters;
+    private boolean saveHistory;
 
     @Override
     public void execute() throws BuildException {
@@ -30,6 +31,10 @@ public class RunnerTask extends Get {
         uri.append(getSuite());
         uri.append("?suite");
         uri.append("&format=xml");
+
+        if (!saveHistory) {
+            uri.append("&nohistory");
+        }
 
         for (SuiteFilter filter : getSuiteFilters()) {
             uri.append("&suiteFilter=");
@@ -87,5 +92,13 @@ public class RunnerTask extends Get {
 
     public void setSuiteFilters(List<SuiteFilter> suiteFilters) {
         this.suiteFilters = suiteFilters;
+    }
+
+    public boolean isSaveHistory() {
+        return saveHistory;
+    }
+
+    public void setSaveHistory(boolean saveHistory) {
+        this.saveHistory = saveHistory;
     }
 }
