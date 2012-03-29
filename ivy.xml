@@ -1,5 +1,5 @@
 <ivy-module version="2.0" xmlns:m="http://ant.apache.org/ivy/maven">
-    <info organisation="com.backstopsolutions" module="ant-fitnesse" revision="1.1.0"/>
+    <info organisation="com.backstopsolutions" module="ant-fitnesse" revision="1.2.0"/>
 
     <configurations>
         <conf name="default"/>
@@ -18,6 +18,6 @@
     <dependencies>
         <dependency org="org.apache.ant" name="ant" rev="1.8.2" conf="compile->default"/>
         <dependency org="org.codehaus.sonar-plugins" name="sonar-ant-task" rev="1.0" conf="build->default"/>
-        <dependency org="org.fitnesse" name="fitnesse" rev="20101230-stfHack" conf="example->default"/>
+        <dependency org="org.fitnesse" name="fitnesse" rev="20120309-stfHack-longerTimeoutHack" conf="example->default"/>
     </dependencies>
 </ivy-module>
