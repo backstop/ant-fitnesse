@@ -6,6 +6,8 @@ import org.apache.tools.ant.taskdefs.Get;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -42,7 +44,10 @@ public class RunnerTask extends Get {
             throw new BuildException(e);
         }
 
+        SimpleDateFormat tstamp = new SimpleDateFormat ("HH:mm:ss");
+        log(tstamp.format(new Date()) + " - Starting suite " + getSuite());
         super.execute();
+        log(tstamp.format(new Date()) + " - Ending suite " + getSuite());
     }
 
     private File getDest(File resultPath, String suite) {

@@ -96,6 +96,7 @@ public class TestTask extends Task {
             runner.setResultPath(resultPath);
             runner.setSuiteFilters(suiteFilters);
             runner.setMaxTime(maxTimeForSuite);
+            runner.setRetries(1);
             runners.addTask(runner);
         }
         return runners;
