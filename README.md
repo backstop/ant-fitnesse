@@ -1,7 +1,7 @@
 Purpose
 =======
 
-The standard way to run [Fitnesse](http://fitnesse.org/) in ant build is:
+The standard way to run [Fitnesse](http://fitnesse.org/) in an ant build script is:
 
     <target name="my_fitnesse_tests">
       <java jar="dist/fitnesse.jar" failonerror="true" fork="true">
@@ -32,7 +32,7 @@ Run interactively:
         <fit:interactive port="9234" classpathref="integration.classpath"/>
     </target>
 
-Run tests in background as part of build:
+Run tests in the background as part of a build:
 
     <fit:suites id="fullSuite">
         <fit:suite name="BlortSuite"/>
