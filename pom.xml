@@ -38,6 +38,13 @@
     </developer>
   </developers>
 
+  <contributors>
+    <contributor>
+      <name>Nate Riffe</name>
+      <email>nriffe@backstopsolutions.com</email>
+    </contributor>
+  </contributors>
+
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <jdk.min.version>1.6</jdk.min.version>
