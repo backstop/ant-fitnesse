@@ -44,6 +44,7 @@ Run tests in background as part of build:
         <mkdir dir="${build}/integration/results"/>
         <fit:test port="24242" classPathRef="integration.classpath" concurrentsuites="5"
                   resultPath="${build}/integration/results" integrationTestsPath="integration-tests">
+            <fit:filter filterName="quicktest"/>
             <fit:suites refid="fullSuite"/>
         </fit:test>
     </target>
