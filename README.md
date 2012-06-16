@@ -48,3 +48,5 @@ Run tests in the background as part of a build:
             <fit:suites refid="fullSuite"/>
         </fit:test>
     </target>
+
+See example.xml for more detail.
