@@ -1,2 +1,6 @@
 target/*
 .idea/*
+example/FitNesseRoot/*
+example/lib/*
+example/results/*
+

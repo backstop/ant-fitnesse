@@ -1,0 +1,17 @@
+ <settings defaultResolver="default-resolver">
+
+  <property name="local-maven2-pattern"
+            value="${user.home}/.m2/repository/[organisation]/[module]/[revision]/[module]-[revision](-[classifier]).[ext]"
+             override="false" />
+
+
+  <resolvers>
+    <chain name="default-resolver">
+      <filesystem  name="local-maven2" m2compatible="true">
+        <ivy pattern="${local-maven2-pattern}"/>
+        <artifact pattern="${local-maven2-pattern}"/>
+      </filesystem>
+      <ibiblio name="ibiblio" m2compatible="true" />
+    </chain>
+  </resolvers>
+</settings>

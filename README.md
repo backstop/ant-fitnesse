@@ -18,6 +18,8 @@ This project lets you run Fitnesse interactively or just run tests as part of a 
 Usage
 =====
 
+See the integration-test task in example/build.xml for more details.
+
 Define the task:
 
     <path id="ant.fitnesse.classpath">
@@ -48,5 +50,3 @@ Run tests in the background as part of a build:
             <fit:suites refid="fullSuite"/>
         </fit:test>
     </target>
-
-See example.xml for more detail.

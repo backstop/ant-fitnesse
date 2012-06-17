@@ -1,0 +1,78 @@
+<project name="ant-fitnesse-example" default="all" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant" xmlns:fit="antlib:com.backstopsolutions.ant.fitnesse">
+
+  <property name="ivy.home" value="${user.home}/.ant"/>
+  <property name="ivy.jar.dir" value="${ivy.home}/lib"/>
+  <property name="ivy.jar.file" value="${ivy.jar.dir}/ivy.jar"/>
+
+  <property name="results.path" value="results"/>
+
+  <target name="clean">
+    <delete dir="lib"/>
+    <delete dir="results"/>
+    <delete dir="FitNesseRoot"/>
+    <delete dir="temp"/>
+  </target>
+
+  <target name="all" depends="integration-test"/>
+
+  <target name="integration-test" depends="resolve">
+    <path id="ant.fitnesse.path">
+      <fileset dir="lib" includes="ant-fitnesse-1.3.0.jar"/>
+    </path>
+    <path id="fitnesse.path">
+      <fileset dir="lib" includes="fitnesse-20111025.jar"/>
+    </path>
+    <taskdef resource="com/backstopsolutions/ant/fitnesse/tasks.xml"
+             classpathref="ant.fitnesse.path" uri="antlib:com.backstopsolutions.ant.fitnesse"/>
+
+    <!-- Start creation of tests -->
+    <!-- This example build file is testing the actual fitnesse acceptance tests.
+         We're going to run fitnesse so it extracts its tests to disk.
+         You shouldn't need to this manually since your tests will already exist. -->
+    <java jar="lib/fitnesse-20111025.jar" failonerror="true" fork="true">
+      <arg value="-p"/>
+      <arg value="9234"/>
+      <arg value="-i"/>
+    </java>
+    <!-- End creation of tests -->
+
+    <fit:suites id="suites">
+      <fit:suite name="FitNesse.SuiteAcceptanceTests.SuiteWikiPageResponderTests"/>
+      <fit:suite name="FitNesse.SuiteAcceptanceTests.SuiteEditResponderTests"/>
+      <fit:suite name="FitNesse.SuiteAcceptanceTests.SuiteResponderTests"/>
+      <fit:suite name="FitNesse.SuiteAcceptanceTests.SuiteVirtualWikiTests"/>
+      <fit:suite name="FitNesse.SuiteAcceptanceTests.SuiteWikiImportTests"/>
+      <fit:suite name="FitNesse.SuiteAcceptanceTests.SuiteAuthenticationTests"/>
+      <fit:suite name="FitNesse.SuiteAcceptanceTests.SuiteFixtureTests"/>
+      <fit:suite name="FitNesse.SuiteAcceptanceTests.SuiteSymbolicLinkTests"/>
+      <fit:suite name="FitNesse.SuiteAcceptanceTests.SuiteFitDecoratorTests"/>
+      <fit:suite name="FitNesse.SuiteAcceptanceTests.SuiteSlimTests"/>
+      <fit:suite name="FitNesse.SuiteAcceptanceTests.SuiteTestHistory"/>
+    </fit:suites>
+
+    <mkdir dir="${results.path}"/>
+
+    <fit:test port="9235" classpathref="fitnesse.path" resultpath="${results.path}" concurrentsuites="2" integrationtestspath="FitNesseRoot">
+      <fit:suites refid="suites"/>
+    </fit:test>
+  </target>
+
+  <target name="resolve" depends="ivy-init">
+    <ivy:settings file="ivy-settings.xml"/>
+    <ivy:retrieve/>
+  </target>
+
+  <target name="ivy-init" depends="ivy-download">
+    <path id="ivy.class.path">
+      <fileset dir="${ivy.jar.dir}" includes="*.jar"/>
+    </path>
+    <taskdef resource="org/apache/ivy/ant/antlib.xml"
+             uri="antlib:org.apache.ivy.ant"
+             classpathref="ivy.class.path"/>
+  </target>
+
+  <target name="ivy-download">
+    <mkdir dir="${ivy.jar.dir}"/>
+    <get src="http://repo2.maven.org/maven2/org/apache/ivy/ivy/2.3.0-rc1/ivy-2.3.0-rc1.jar" dest="${ivy.jar.file}" usetimestamp="true" verbose="true"/>
+  </target>
+</project>

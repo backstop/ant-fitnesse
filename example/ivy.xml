@@ -1,0 +1,7 @@
+<ivy-module version="2.0">
+    <info organisation="com.backstopsolutions" module="ant-fitnesse-example"/>
+    <dependencies>
+        <dependency org="org.fitnesse" name="fitnesse" rev="20111025"/>
+        <dependency org="com.backstopsolutions" name="ant-fitnesse" rev="1.3.0"/>
+    </dependencies>
+</ivy-module>
