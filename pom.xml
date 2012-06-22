@@ -22,7 +22,8 @@
 
   <scm>
     <url>https://github.com/backstop/ant-fitnesse</url>
-    <connection>scm:git:https://github.com/backstop/ant-fitnesse.git</connection>
+    <connection>scm:git:git@github.com:backstop/ant-fitnesse.git</connection>
+    <developerConnection>scm:git:git@github.com:backstop/ant-fitnesse.git</developerConnection>
   </scm>
 
   <organization>
