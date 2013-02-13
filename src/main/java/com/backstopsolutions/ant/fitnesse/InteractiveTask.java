@@ -82,7 +82,6 @@ public class InteractiveTask extends Java {
         createArg().setLine(Integer.toString(getPort()));
         createArg().setLine("-r");
         createArg().setLine(getIntegrationTestPath());
-//        createArg().setLine("-o");
         createArg().setLine("-e");
         createArg().setLine("0");
 
