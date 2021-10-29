@@ -40,11 +40,11 @@ public class Suites extends DataType implements ResourceCollection {
     }
 
     public Iterator iterator() {
-        return isReference() ? ((Suites) getCheckedRef()).iterator() : suites.iterator();
+        return isReference() ? ((Suites) getCheckedRef(this.getClass())).iterator() : suites.iterator();
     }
 
     public int size() {
-        return isReference() ? ((Suites) getCheckedRef()).size() : suites.size();
+        return isReference() ? ((Suites) getCheckedRef(this.getClass())).size() : suites.size();
     }
 
     public boolean isFilesystemOnly() {
