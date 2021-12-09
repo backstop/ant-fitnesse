@@ -40,7 +40,8 @@ public class Suites extends DataType implements ResourceCollection {
     }
 
     public Iterator iterator() {
-        return isReference() ? ((Suites) getCheckedRef(this.getClass())).iterator() : suites.iterator();
+        return isReference() ? ((Suites) getCheckedRef(this.getClass(), this.getDataTypeName(),
+                this.getProject())).iterator() : suites.iterator();
     }
 
     public int size() {
