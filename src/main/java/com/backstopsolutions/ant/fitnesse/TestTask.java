@@ -25,6 +25,7 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.Parallel;
 import org.apache.tools.ant.taskdefs.Sequential;
 import org.apache.tools.ant.taskdefs.Sleep;
+import org.apache.tools.ant.types.Environment;
 import org.apache.tools.ant.types.Reference;
 
 import java.io.File;
@@ -51,6 +52,7 @@ public class TestTask extends Task {
     private String integrationTestsPath;
     private String slimTableFactory;
     private long maxTimeForSuite;
+    private Environment env = new Environment();
 
     public TestTask() {
         concurrentSuites = DEFAULT_CONCURRENT_SUITES;
@@ -63,7 +65,7 @@ public class TestTask extends Task {
         Parallel container = new Parallel();
         container.setProject(getProject());
         container.setTaskName("parallel");
-        container.addDaemons(initDaemons(getProject(), getPort(), getClasspathRef(), getIntegrationTestsPath(), getSlimTableFactory()));
+        container.addDaemons(initDaemons(getProject(), getPort(), getClasspathRef(), getIntegrationTestsPath(), getSlimTableFactory(), getEnv()));
         container.addTask(initSequence(getProject(), getPort(), getResultPath(), getSuiteNames(suites), filters, getConcurrentSuites(), getMaxTimeForSuite()));
         container.execute();
     }
@@ -87,7 +89,7 @@ public class TestTask extends Task {
         return runnerSequence;
     }
 
-    private static Parallel.TaskList initDaemons(Project project, int port, Reference classpathRef, String integrationTestsPath, String slimTableFactory) {
+    private static Parallel.TaskList initDaemons(Project project, int port, Reference classpathRef, String integrationTestsPath, String slimTableFactory, Environment env) {
         Parallel.TaskList daemonList = new Parallel.TaskList();
         InteractiveTask fitnesseTask = new InteractiveTask();
         fitnesseTask.setTaskName("fitnesse");
@@ -96,6 +98,9 @@ public class TestTask extends Task {
         fitnesseTask.setClasspathRef(classpathRef);
         fitnesseTask.setIntegrationTestsPath(integrationTestsPath);
         fitnesseTask.setSlimTableFactory(slimTableFactory);
+        for (Environment.Variable var : env.getVariablesVector()) {
+            fitnesseTask.addEnv(var);
+        }
         daemonList.addTask(fitnesseTask);
         return daemonList;
     }
@@ -197,5 +202,13 @@ public class TestTask extends Task {
 
     public void setMaxTimeForSuite(long maxTimeForSuite) {
         this.maxTimeForSuite = maxTimeForSuite;
+    }
+
+    public void addEnv(Environment.Variable var) {
+        this.env.addVariable(var);
+    }
+
+    public Environment getEnv() {
+        return env;
     }
 }
