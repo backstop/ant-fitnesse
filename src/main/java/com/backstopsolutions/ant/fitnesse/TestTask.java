@@ -52,6 +52,7 @@ public class TestTask extends Task {
     private String integrationTestsPath;
     private String slimTableFactory;
     private long maxTimeForSuite;
+    private int webServerStartupWaitSeconds = SECONDS_TO_WAIT_FOR_WEBSERVER_TO_START;
     private Environment env = new Environment();
 
     public TestTask() {
@@ -66,7 +67,7 @@ public class TestTask extends Task {
         container.setProject(getProject());
         container.setTaskName("parallel");
         container.addDaemons(initDaemons(getProject(), getPort(), getClasspathRef(), getIntegrationTestsPath(), getSlimTableFactory(), getEnv()));
-        container.addTask(initSequence(getProject(), getPort(), getResultPath(), getSuiteNames(suites), filters, getConcurrentSuites(), getMaxTimeForSuite()));
+        container.addTask(initSequence(getProject(), getPort(), getResultPath(), getSuiteNames(suites), filters, getConcurrentSuites(), getMaxTimeForSuite(), getWebServerStartupWaitSeconds()));
         container.execute();
     }
 
@@ -80,11 +81,12 @@ public class TestTask extends Task {
         return names;
     }
 
-    private static Sequential initSequence(Project project, int port, File resultPath, Set<String> suiteNames, List<SuiteFilter> suiteFilters, int concurrentSuites, long maxTimeForSuite) {
+    private static Sequential initSequence(Project project, int port, File resultPath, Set<String> suiteNames, List<SuiteFilter> suiteFilters, int concurrentSuites, long maxTimeForSuite,
+            int webServerStartupWaitSeconds) {
         Sequential runnerSequence = new Sequential();
         runnerSequence.setProject(project);
         runnerSequence.setTaskName("sequential");
-        runnerSequence.addTask(initSleep(project, SECONDS_TO_WAIT_FOR_WEBSERVER_TO_START));
+        runnerSequence.addTask(initSleep(project, webServerStartupWaitSeconds));
         runnerSequence.addTask(initRunners(project, suiteNames, port, resultPath, suiteFilters, concurrentSuites, maxTimeForSuite));
         return runnerSequence;
     }
@@ -210,5 +212,13 @@ public class TestTask extends Task {
 
     public Environment getEnv() {
         return env;
+    }
+
+    public int getWebServerStartupWaitSeconds() {
+        return webServerStartupWaitSeconds;
+    }
+
+    public void setWebServerStartupWaitSeconds(int webServerStartupWaitSeconds) {
+        this.webServerStartupWaitSeconds = webServerStartupWaitSeconds;
     }
 }
